@@ -481,10 +481,10 @@ AbstractCriterion.__hash__ = instancemethod(
 )
 
 
-
-
-
-
+try:
+    from _speedups import dispatch_by_mro
+except ImportError:
+    pass
 
 
 

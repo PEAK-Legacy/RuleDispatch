@@ -3,12 +3,12 @@
 __all__ = [
 ]
 
-cdef object NoApplicableMethods, DispatchError, _NF
+cdef object InstanceType, NoApplicableMethods, DispatchError, _NF, __nclass
 from dispatch.interfaces import NoApplicableMethods, DispatchError
+from types import InstanceType
+__nclass = "__class__"
 
 _NF = [0,None, NoApplicableMethods, (None,None)]
-
-
 
 
 
@@ -61,6 +61,7 @@ cdef extern from "Python.h":
         void *ob_item   # we don't use this, but we can't use 'pass' here
 
     ctypedef struct PyTypeObject:
+        PyTupleObject *tp_bases
         PyTupleObject *tp_mro
 
     ctypedef struct PyObject:
@@ -79,7 +80,6 @@ cdef extern from "Python.h":
     int PyTuple_Check(object op)
     int PyList_Check(object op)
 
-
     int len "PyObject_Length" (object o) except -1
     object type "PyObject_Type" (object o)
     int isinstance "PyObject_IsInstance" (object inst, object cls)
@@ -89,13 +89,13 @@ cdef extern from "Python.h":
     void * PyTuple_GET_ITEM(PyTupleObject *p, int pos)
     void * PyList_GET_ITEM(PyListObject *p, int pos)
     void * PyDict_GetItem(object dict,object key)
+    int PyDict_Check(object op)
 
     PyTypeObject PyInstance_Type
     PyTypeObject PyBaseObject_Type
 
     void Py_DECREF(PyObject *p)
     object __Pyx_GetExcValue()
-
 
 
 
@@ -202,6 +202,61 @@ def dispatch_by_inequalities(table,ob):
             else:
                 return table[t]
 
+
+def dispatch_by_mro(table,ob):
+    """Lookup '__class__' of 'ob' in 'table' using its MRO order"""
+
+    cdef int bc
+    cdef void *tmp
+    cdef PyTupleObject *bases
+    
+    if not PyDict_Check(table):
+        raise TypeError("Not a dict subclass", table)
+        
+    tmp = PyObject_GetAttr(ob, __nclass)
+    if tmp:
+        klass = <object> tmp
+        Py_DECREF(<PyObject *>tmp)  # GetAttr does an INCREF
+
+    elif PyErr_ExceptionMatches(PyExc_AttributeError):
+        # Some object have no __class__; use their type
+        PyErr_Clear()
+        klass = type(ob)
+    else:
+        # Some other error, pass it on up the line
+        err = __Pyx_GetExcValue()
+        raise
+
+    while 1:
+        tmp = PyDict_GetItem(table, klass)
+        if tmp:
+            return <object>tmp
+
+        if PyClass_Check(klass):
+            bases = (<PyClassObject *>klass).cl_bases
+        elif PyType_Check(klass):
+            bases = (<PyTypeObject *>klass).tp_bases
+        else:
+            raise TypeError("Not a class or type:", klass)
+
+        bc = PyTuple_GET_SIZE(bases)
+        if bc>1:
+            # Fixup for multiple inheritance
+            return table.reseed(klass)
+        elif bc:
+            klass = <object> PyTuple_GET_ITEM(bases, 0)
+        else:
+            break
+
+    if PyInstance_Check(ob):
+        tmp = PyDict_GetItem(table, InstanceType)
+        if tmp:
+            return <object>tmp
+
+    if <PyTypeObject *>klass != &PyBaseObject_Type:
+        tmp = PyDict_GetItem(table, <object>&PyBaseObject_Type)
+        if tmp:
+            return <object>tmp
 
 cdef class ExprCache:
 
