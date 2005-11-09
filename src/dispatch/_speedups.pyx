@@ -258,6 +258,7 @@ def dispatch_by_mro(table,ob):
         if tmp:
             return <object>tmp
 
+
 cdef class ExprCache:
 
     cdef object cache,argtuple,expr_defs
@@ -282,21 +283,6 @@ cdef class ExprCache:
         f,args = self.expr_defs[item]
         f = self.cache[item] = f(*map(self.__getitem__,args))
         return f
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 cdef class BaseDispatcher:

@@ -372,6 +372,8 @@ class Call(ExprBase):
     """Compute an expression by calling a function with 0 or more arguments"""
 
     def __new__(klass,function,*argexprs):
+        if not argexprs:
+            return ExprBase.__new__(klass,function)
         for arg in argexprs:
             if not isinstance(arg,Const):
                 return ExprBase.__new__(klass,function,*argexprs)

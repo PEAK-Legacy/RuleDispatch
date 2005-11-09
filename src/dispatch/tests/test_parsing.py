@@ -502,7 +502,7 @@ class ExprBuilderTests(TestCase):
         empty = Const(())
 
         self.assertEqual(pe("a()"), Call(apply,a))
-        self.assertEqual(pe("dict()"), Const({}))
+        self.assertEqual(pe("dict()"), Call(dict))
         self.assertEqual(pe("int(a)"), Call(int,a))
 
         self.assertEqual(pe("a(1,2)"), Call(apply,a,one_two))
