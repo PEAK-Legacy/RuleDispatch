@@ -408,8 +408,6 @@ class Call(ExprBase):
 
 
 
-
-
 class MultiCriterion(AbstractCriterion):
     """Abstract base for boolean combinations of criteria"""
     __slots__ = 'node_type'
