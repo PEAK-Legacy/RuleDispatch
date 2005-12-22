@@ -228,3 +228,43 @@ Sequence building, unpacking, dup'ing:
 
     XXX Need tests for MAKE_CLOSURE/MAKE_FUNCTION
 
+
+Labels and backpatching forward references:
+
+    >>> c = Code()
+    >>> ref = c.JUMP_ABSOLUTE()
+    >>> c.LOAD_CONST(1)
+    >>> ref()
+    >>> c.RETURN_VALUE()
+    >>> dis(c.code())
+      0           0 JUMP_ABSOLUTE            6
+                  3 LOAD_CONST               0 (1)
+            >>    6 RETURN_VALUE
+
+    >>> c = Code()
+    >>> ref = c.JUMP_FORWARD()
+    >>> c.LOAD_CONST(1)
+    >>> ref()
+    >>> c.RETURN_VALUE()
+    >>> dis(c.code())
+      0           0 JUMP_FORWARD             3 (to 6)
+                  3 LOAD_CONST               0 (1)
+            >>    6 RETURN_VALUE
+
+    >>> c = Code()
+    >>> lbl = c.label()
+    >>> c.LOAD_CONST(1)
+    >>> c.JUMP_IF_TRUE(lbl)
+    Traceback (most recent call last):
+      ...
+    AssertionError: Relative jumps can't go backwards
+    
+    >>> c = Code()
+    >>> lbl = c.label()
+    >>> c.LOAD_CONST(1)
+    >>> ref = c.JUMP_ABSOLUTE(lbl)
+    >>> dis(c.code())
+      0     >>    0 LOAD_CONST               0 (1)
+                  3 JUMP_ABSOLUTE            0
+
+

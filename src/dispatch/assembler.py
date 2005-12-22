@@ -184,23 +184,23 @@ class Code:
         self.stackchange((1+freevars+ndefaults,1))
         self.emit_arg(MAKE_CLOSURE, ndefaults)
 
+    def label(self):
+        return len(self.co_code)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def jump(self, op, arg=None):
+        def backpatch(target):
+            if op not in hasjabs:
+                target = target - posn
+                assert target>=0, "Relative jumps can't go backwards"
+            self.co_code[posn-2] = target & 255
+            self.co_code[posn-1] = (target>>8) & 255
+        def lbl():
+            backpatch(self.label())
+        self.emit_arg(op,0)
+        posn = self.label()
+        if arg is not None:
+            backpatch(arg)            
+        return lbl
 
 
 for op in hasname:
@@ -227,12 +227,12 @@ for op in haslocal:
             self.emit_arg(op, arg)
         setattr(Code, opname[op], do_local)
 
-
-
-
-
-
-
+for op in hasjrel+hasjabs:
+    if not hasattr(Code, opname[op]):
+        def do_jump(self, address=None, op=op):
+            self.stackchange(stack_effects[op])
+            return self.jump(op, address)
+        setattr(Code, opname[op], do_jump)
 
 
 
@@ -289,6 +289,7 @@ stack_effects = [(0,0)]*256
 
 for name in opcode:
     op = opcode[name]
+    name = name.replace('+','_')
 
     if hasattr(_se,name):
         # update stack effects table from the _se class
@@ -303,13 +304,7 @@ for name in opcode:
             def do_op(self,op=op,se=stack_effects[op]):
                 self.stackchange(se); self.emit(op)
 
-        setattr(Code, name.replace('+','_'), do_op)
-
-
-
-
-
-
+        setattr(Code, name, do_op)
 
 
 
