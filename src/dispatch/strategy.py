@@ -884,7 +884,7 @@ class Inequality(object):
                     h = min(h1,h2)
                     if l<=h:
                         ranges.append((l,h))
-                        break
+                        l1 = l
         return self.__class__('..',ranges)
 
     def __eq__(self,other):

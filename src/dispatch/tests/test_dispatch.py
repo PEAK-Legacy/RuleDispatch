@@ -325,7 +325,7 @@ class CriteriaTests(TestCase):
         self.assertRaises(AttributeError,
             strategy.dispatch_by_subclass, table, Bicycle)
 
-        
+
     def testInequalities(self):
         self.assertRaises(ValueError, Inequality, '', 1)
         self.assertRaises(ValueError, Inequality, 'xyz', 2)
@@ -367,6 +367,12 @@ class CriteriaTests(TestCase):
 
 
 
+        # Test intersection of overlapping open intervals
+        t6=Inequality('>=',6); t8=Inequality('<=',8); t68 = t6&t8
+        self.assertEqual(t6.ranges, ((6,6),(6,Max)))
+        self.assertEqual(t8.ranges, ((Min,8),(8,8)))
+        self.assertEqual(t68.ranges, ((6,6),(6,8),(8,8)))
+
     def testInequalitySeeds(self):
         self.assertEqual(
             strategy.concatenate_ranges(
@@ -388,12 +394,6 @@ class CriteriaTests(TestCase):
     def testClasslessDispatch(self):
         class Classic: pass # Classic classes have no __class_ attribute
         strategy.dispatch_by_mro({},Classic)
-
-
-
-
-
-
 
 
 
@@ -544,7 +544,7 @@ class CriteriaTests(TestCase):
         self.assertEqual(~Inequality(">=",27), Inequality("<",27))
         for op,rev in strategy.rev_ops.items():
             self.assertEqual(Inequality(op,27), ~Inequality(rev,27))
-            
+
 
 
     def testTruthDispatch(self):
@@ -1406,7 +1406,7 @@ def test_assembler():
     from protocols.tests import doctest
     return doctest.DocFileSuite(
         'assembler.txt', package='dispatch',
-        optionflags=doctest.ELLIPSIS|doctest.NORMALIZE_WHITESPACE, 
+        optionflags=doctest.ELLIPSIS|doctest.NORMALIZE_WHITESPACE,
     )
 
 def test_suite():
