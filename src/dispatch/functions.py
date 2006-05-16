@@ -245,7 +245,7 @@ class BaseDispatcher:
         return func
 
 try:
-    from dispatch._speedups import BaseDispatcher
+    from dispatch._d_speedups import BaseDispatcher
 except ImportError:
     pass    # '''
 

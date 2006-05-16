@@ -15,7 +15,7 @@ speedups = Feature(
     "optional C speed-enhancement modules",
     standard = True,
     ext_modules = [
-        Extension("dispatch._speedups", ["src/dispatch/_speedups.pyx"]),
+        Extension("dispatch._d_speedups", ["src/dispatch/_d_speedups.pyx"]),
     ]
 )
 

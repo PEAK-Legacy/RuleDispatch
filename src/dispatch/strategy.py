@@ -482,7 +482,7 @@ AbstractCriterion.__hash__ = instancemethod(
 
 
 try:
-    from _speedups import dispatch_by_mro
+    from _d_speedups import dispatch_by_mro
 except ImportError:
     pass
 
@@ -726,7 +726,7 @@ def concatenate_ranges(range_map):
     return output
 
 try:
-    from _speedups import \
+    from _d_speedups import \
         concatenate_ranges, dispatch_by_inequalities, Min, Max
 except ImportError:
     pass
