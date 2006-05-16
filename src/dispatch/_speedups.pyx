@@ -7,9 +7,9 @@ cdef object InstanceType, NoApplicableMethods, DispatchError, _NF, __nclass
 from dispatch.interfaces import NoApplicableMethods, DispatchError
 from types import InstanceType
 __nclass = "__class__"
+__nbases = "__bases__"
 
 _NF = [0,None, NoApplicableMethods, (None,None)]
-
 
 
 
@@ -231,12 +231,20 @@ def dispatch_by_mro(table,ob):
         tmp = PyDict_GetItem(table, klass)
         if tmp:
             return <object>tmp
-
         if PyClass_Check(klass):
             bases = (<PyClassObject *>klass).cl_bases
         elif PyType_Check(klass):
             bases = (<PyTypeObject *>klass).tp_bases
         else:
+            bases = NULL
+            tmp = PyObject_GetAttr(ob, __nbases)
+            if tmp:
+                bt = <object> tmp
+                if PyTuple_Check(bt):
+                    bases = <PyTupleObject *> tmp
+                bt = None
+
+        if not bases:
             raise TypeError("Not a class or type:", klass)
 
         bc = PyTuple_GET_SIZE(bases)
@@ -257,6 +265,24 @@ def dispatch_by_mro(table,ob):
         tmp = PyDict_GetItem(table, <object>&PyBaseObject_Type)
         if tmp:
             return <object>tmp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 cdef class ExprCache:
@@ -283,6 +309,21 @@ cdef class ExprCache:
         f,args = self.expr_defs[item]
         f = self.cache[item] = f(*map(self.__getitem__,args))
         return f
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 cdef class BaseDispatcher:
