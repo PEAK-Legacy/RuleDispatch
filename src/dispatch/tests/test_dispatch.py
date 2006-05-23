@@ -1402,18 +1402,18 @@ def test_combiners():
         'combiners.txt', optionflags=doctest.ELLIPSIS, package='dispatch',
     )
 
-def test_assembler():
-    from protocols.tests import doctest
-    return doctest.DocFileSuite(
-        'assembler.txt', package='dispatch',
-        optionflags=doctest.ELLIPSIS|doctest.NORMALIZE_WHITESPACE,
-    )
-
 def test_suite():
     return TestSuite(
-        [test_combiners(), test_assembler()] +
+        [test_combiners()] +
         [makeSuite(t,'test') for t in TestClasses]
     )
+
+
+
+
+
+
+
 
 
 
