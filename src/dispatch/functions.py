@@ -14,7 +14,7 @@ __all__ = [
     'GenericFunction', 'Dispatcher', 'AbstractGeneric',
 ]
 
-_NF = (0,None, NoApplicableMethods, (None,None))
+_NF = (0,None, NoApplicableMethods(), (None,None))
 
 
 try:

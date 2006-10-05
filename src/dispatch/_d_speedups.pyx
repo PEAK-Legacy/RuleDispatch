@@ -9,7 +9,7 @@ from types import InstanceType
 __nclass = "__class__"
 __nbases = "__bases__"
 
-_NF = [0,None, NoApplicableMethods, (None,None)]
+_NF = [0,None, NoApplicableMethods(), (None,None)]
 
 
 
@@ -209,10 +209,10 @@ def dispatch_by_mro(table,ob):
     cdef int bc
     cdef void *tmp
     cdef PyTupleObject *bases
-    
+
     if not PyDict_Check(table):
         raise TypeError("Not a dict subclass", table)
-        
+
     tmp = PyObject_GetAttr(ob, __nclass)
     if tmp:
         klass = <object> tmp

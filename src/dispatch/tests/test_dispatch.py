@@ -1381,13 +1381,13 @@ One vehicle is a land vehicle, the other is a sea vehicle.")
         self.assertEqual(f("y","q",),"y")
         self.assertRaises(AmbiguousMethod, f, "x","y")
 
-
-
-
-
-
-
-
+    def test_NoApplicableMethods_is_raised(self):
+        [dispatch.generic()]
+        def demo_func(number):
+            pass
+        demo_func.when("number < 10")(lambda x: 0)
+        self.assertEqual(demo_func(3),0)
+        self.assertRaises(dispatch.NoApplicableMethods, demo_func, 33)
 
 
 
