@@ -45,7 +45,7 @@ from protocols.advice import getMRO
 import protocols, operator, inspect
 from types import ClassType, InstanceType
 ClassTypes = (ClassType, type)
-from sys import _getframe
+from sys import _getframe, maxint
 from weakref import WeakKeyDictionary, ref
 from dispatch.interfaces import *
 from new import instancemethod
@@ -538,7 +538,7 @@ class Pointer(int):
     __slots__ = 'ref'
 
     def __new__(cls,ob):
-        self = int.__new__(cls,id(ob))
+        self = Pointer.__base__.__new__(cls,id(ob)&maxint)
         try:
             self.ref=ref(ob)
         except TypeError:
@@ -556,7 +556,7 @@ class Pointer(int):
 
 
 def dispatch_by_identity(table,ob):
-    oid = id(ob)
+    oid = id(ob)&maxint
     if oid in table:
         return table[oid]
     return table[None]

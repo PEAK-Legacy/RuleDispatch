@@ -4,7 +4,7 @@ from unittest import TestCase, makeSuite, TestSuite
 
 import operator, string
 from types import ClassType, InstanceType
-
+from sys import maxint, version
 import dispatch,protocols
 from dispatch import *
 from dispatch.predicates import *; from dispatch.functions import *
@@ -233,7 +233,7 @@ class CriteriaTests(TestCase):
 
     def testIdentityDispatch(self):
         ob1, ob2, ob3 = object(),object(),object()
-        id1, id2, id3 = map(id, [ob1,ob2,ob3])
+        id1, id2, id3 = [id(ob)&maxint for ob in [ob1,ob2,ob3]]
         table = {id1:1,id2:2,None:3}
         self.assertEqual(strategy.dispatch_by_identity(table, Vehicle), 3)
         self.assertEqual(strategy.dispatch_by_identity(table, ob1), 1)
@@ -252,12 +252,12 @@ class CriteriaTests(TestCase):
     def testPointers(self):
         anOb = object()
         ptr = Pointer(anOb)
-        self.assertEqual(id(anOb),ptr)
-        self.assertEqual(hash(id(anOb)),hash(ptr))
+        self.assertEqual(id(anOb)&maxint,ptr)
+        self.assertEqual(hash(id(anOb)&maxint),hash(ptr))
         class X: pass
         anOb = X()
         ptr = Pointer(anOb)
-        oid = id(anOb)
+        oid = id(anOb)&maxint
         self.assertEqual(oid,ptr)
         self.assertEqual(hash(oid),hash(ptr))
         del anOb
@@ -272,7 +272,7 @@ class CriteriaTests(TestCase):
         validateCriterion(i,
             strategy.make_node_type(strategy.dispatch_by_identity))
         i = ISeededCriterion(i)
-        self.assertEqual(list(i.seeds()),[None,id(ob)])
+        self.assertEqual(list(i.seeds()),[None,id(ob)&maxint])
 
     def testSeededIndex(self):
         i = SeededIndex(None)  # XXX
@@ -1397,7 +1397,7 @@ TestClasses = (
 )
 
 def test_combiners():
-    from protocols.tests import doctest
+    import doctest 
     return doctest.DocFileSuite(
         'combiners.txt', optionflags=doctest.ELLIPSIS, package='dispatch',
     )
@@ -1407,7 +1407,6 @@ def test_suite():
         [test_combiners()] +
         [makeSuite(t,'test') for t in TestClasses]
     )
-
 
 
 

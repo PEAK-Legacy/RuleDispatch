@@ -58,7 +58,7 @@ testlist = subscriptlist = curry(com_binary, 'Tuple')
 testlist_gexp = testlist    # XXX
 
 # test: and_test ('or' and_test)* | lambdef
-test = curry(com_binary, 'Or')
+or_test = test = curry(com_binary, 'Or')
 
 
 # and_test: not_test ('and' not_test)*
