@@ -6,7 +6,7 @@ This software may be used under the same terms as Python or Zope, with NO
 WARRANTIES OF ANY KIND WHATSOEVER.
 """
 
-import ez_setup
+import ez_setup, sys
 ez_setup.use_setuptools()
 
 from setuptools import setup, Feature, Extension, find_packages
@@ -28,7 +28,7 @@ setup(
     license="PSF or ZPL",
     install_requires = ['PyProtocols>=1.0a0dev'],
     #url="http://peak.telecommunity.com/PyProtocols.html",
-    zip_safe    = True,
+    zip_safe    = sys.version>='2.3.5',
     test_suite  = 'dispatch.tests.test_suite',
     package_dir = {'':'src'},
     package_data = {'': ['*.txt']},
