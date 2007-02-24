@@ -75,7 +75,7 @@ def generic(combiner=None):
     """
 
     from dispatch.functions import GenericFunction, AbstractGeneric
-    from protocols.advice import add_assignment_advisor
+    from peak.util.decorators import decorate_assignment
 
 
 
@@ -92,7 +92,7 @@ def generic(combiner=None):
             gf.combine = combiner
             return gf.delegate
 
-    return add_assignment_advisor(callback)
+    return decorate_assignment(callback)
 
 
 def as(*decorators):
@@ -117,8 +117,8 @@ def as(*decorators):
             v = d(v)
         return v
 
-    from protocols.advice import add_assignment_advisor
-    return add_assignment_advisor(callback)
+    from peak.util.decorators import decorate_assignment
+    return decorate_assignment(callback)
 
 
 def on(argument_name):
@@ -157,8 +157,8 @@ def on(argument_name):
         return _mkGeneric(value,argument_name)
 
     from dispatch.functions import _mkGeneric
-    from protocols.advice import add_assignment_advisor
-    return add_assignment_advisor(callback)
+    from peak.util.decorators import decorate_assignment
+    return decorate_assignment(callback)
 
 
 

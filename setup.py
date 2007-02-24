@@ -26,7 +26,7 @@ setup(
     author="Phillip J. Eby",
     author_email="peak@eby-sarna.com",
     license="PSF or ZPL",
-    install_requires = ['PyProtocols>=1.0a0dev'],
+    install_requires = ['PyProtocols>=1.0a0dev-r2287'],
     #url="http://peak.telecommunity.com/PyProtocols.html",
     zip_safe    = sys.version>='2.3.5',
     test_suite  = 'dispatch.tests.test_suite',

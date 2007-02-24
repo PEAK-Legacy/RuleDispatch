@@ -4,7 +4,7 @@ from __future__ import generators
 from dispatch.interfaces import *
 
 import protocols, inspect, sys, dispatch
-from protocols.advice import add_assignment_advisor,getFrameInfo,addClassAdvisor
+from peak.util.decorators import decorate_assignment, frameinfo, decorate_class
 from protocols.interfaces import allocate_lock
 from new import instancemethod
 from types import FunctionType, ClassType, InstanceType
@@ -76,7 +76,7 @@ def setup(__gfProtocol, __gfDefaults):
             if old_locals.get(name) is func:
                 return func
             return value
-        return add_assignment_advisor(callback)
+        return decorate_assignment(callback)
 
 
 
@@ -582,7 +582,7 @@ class AbstractGeneric(Dispatcher):
             else:
                 func = qualifier,value
 
-            kind,module,locals_,globals_ = getFrameInfo(frm)
+            kind,module,locals_,globals_ = frameinfo(frm)
             if kind=='class':
                 # 'when()' in class body; defer adding the method
                 def registerClassSpecificMethod(cls):
@@ -592,7 +592,7 @@ class AbstractGeneric(Dispatcher):
                     self.addMethod(req & cond, func)
                     return cls
 
-                addClassAdvisor(registerClassSpecificMethod,frame=frm)
+                decorate_class(registerClassSpecificMethod,frame=frm)
             else:
                 self.addMethod(cond,func)
 
@@ -601,7 +601,7 @@ class AbstractGeneric(Dispatcher):
 
             return value
 
-        return add_assignment_advisor(registerMethod,frame=frame)
+        return decorate_assignment(registerMethod,frame=frame)
 
 
 
