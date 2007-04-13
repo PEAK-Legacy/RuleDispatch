@@ -12,7 +12,7 @@ __all__ = [
     'Call',
     'AndCriterion', 'NotCriterion', 'TruthCriterion',
     'ExprBuilder', 'Const', 'Getattr', 'Tuple', 'dispatch_by_truth',
-    'OrExpr', 'AndExpr', 'CriteriaBuilder', 'expressionSignature',
+    'OrExpr', 'AndExpr', 'CriteriaBuilder', 'expressionSignature', 'IfElse',
 ]
 
 # Helper functions for operations not supplied by the 'operator' module
@@ -73,8 +73,8 @@ class ExprBuilder:
             self._cmp_ops[op], build(self,initExpr), build(self,other)
         )
 
-
-
+    def IfElse(self, tval, cond, fval):
+        return IfElse(build(self,tval), build(self,cond), build(self,fval))
 
 
 
@@ -245,7 +245,6 @@ class OrExpr(LogicalExpr):
 
 
 class AndExpr(LogicalExpr):
-
     """Lazily compute logical 'and' of exprs"""
 
     def asFuncAndIds(self,generic):
@@ -269,19 +268,20 @@ class AndExpr(LogicalExpr):
         return item
 
 
+class IfElse(LogicalExpr):
+    """Python 2.5 conditional expression"""
 
+    def asFuncAndIds(self,generic):
+        argIds = map(generic.getExpressionId, self.argexprs)
+        def ifelse(get):
+            if get(argIds[1]): return get(argIds[0])
+            return get(argIds[2])
+        return ifelse, (EXPR_GETTER_ID,)
 
-
-
-
-
-
-
-
-
-
-
-
+    [as(classmethod)]
+    def immediate(klass,seq):
+        if seq[1]: return seq[0]
+        return seq[2]
 
 
 

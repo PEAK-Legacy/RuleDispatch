@@ -2,7 +2,7 @@
 
 from unittest import TestCase, makeSuite, TestSuite
 
-import operator, string
+import operator, sys
 from types import ClassType, InstanceType
 from sys import maxint, version
 import dispatch,protocols
@@ -839,18 +839,18 @@ class ExpressionTests(TestCase):
             self.assertNotEqual(xy, item)
             self.assertNotEqual(hash(xy), hash(item))
 
-
-
-
-
-
-
-
-
-
-
-
-
+    if sys.version>='2.5':
+        def testIfElse(self):
+            x,y,z = Argument(name='x'), Argument(name='y'), Argument(name='z')
+            xyz = IfElse(x,y,z)
+            ie = GenericFunction(lambda x,y,z:None)
+            ie[Signature([(xyz, TruthCriterion())])] = lambda x,y,z:True
+            ie[Signature([])] = lambda x,y,z: False
+            self.assertEqual(ie(1,0,0), False)
+            self.assertEqual(ie(1,1,0), True)
+            self.assertEqual(ie(0,1,1), False)
+            self.assertEqual(ie(0,0,1), True)
+            
 
 
 
@@ -1407,6 +1407,7 @@ def test_suite():
         [test_combiners()] +
         [makeSuite(t,'test') for t in TestClasses]
     )
+
 
 
 

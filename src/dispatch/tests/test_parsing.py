@@ -93,10 +93,10 @@ class StringBuilder:
             build(self,func),self.Tuple(args),self.Dict(kw),star_node,dstar_node
         )
 
-
-
-
-
+    def IfElse(self, trueVal, condition, falseVal):
+        return 'IfElse(%s,%s,%s)' % (
+            build(self, trueVal), build(self, condition), build(self, falseVal)
+        )
 
 
 
@@ -157,10 +157,10 @@ class EventTests(TestCase):
         self.assertEqual(pe("not a"), "Not(a)")
         self.assertEqual(pe("`a`"), "repr(a)")
 
-
-
-
-
+    if sys.version>='2.5':
+        def testIfElse(self):
+            self.assertEqual(pe("a if b else c"), "IfElse(a,b,c)")
+            
 
     def testSequences(self):
         self.assertEqual(pe("a,"), "Tuple(a)")
@@ -356,10 +356,10 @@ class ExprBuilderTests(TestCase):
         self.assertEqual(self.parse("'xyz'"), Const('xyz'))
         self.assertEqual(self.parse("'abc' 'xyz'"), Const('abcxyz'))
 
-
-
-
-
+    if sys.version>='2.5':
+        def testIfElse(self):
+            a,b,c = Argument(name='a'), Argument(name='b'), Argument(name='c')
+            self.assertEqual(self.parse("a if b else c"), IfElse(a,b,c))
 
 
 
@@ -440,9 +440,9 @@ class ExprBuilderTests(TestCase):
         self.assertEqual(pe('"" and 2'), Const(""))
         self.assertEqual(pe('"" or 53 or 27'), Const(53))
 
-
-
-
+        if sys.version>="2.5":
+            self.assertEqual(pe('1 if 2 else 3'), Const(1))
+            self.assertEqual(pe('1 if not 2 else 3'), Const(3))
 
 
 

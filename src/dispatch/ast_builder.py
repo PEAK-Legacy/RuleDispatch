@@ -58,7 +58,14 @@ testlist = subscriptlist = curry(com_binary, 'Tuple')
 testlist_gexp = testlist    # XXX
 
 # test: and_test ('or' and_test)* | lambdef
-or_test = test = curry(com_binary, 'Or')
+test = curry(com_binary, 'Or')
+
+if sys.version>='2.5':
+    or_test = test
+
+    # test: or_test ['if' or_test 'else' test] | lambdef
+    def test(builder, nodelist):
+        return builder.IfElse(nodelist[1], nodelist[3], nodelist[5])
 
 
 # and_test: not_test ('and' not_test)*
@@ -68,13 +75,6 @@ and_test = curry(com_binary, 'And')
 # not_test: 'not' not_test | comparison
 def not_test(builder, nodelist):
     return builder.Not(nodelist[2])
-
-
-
-
-
-
-
 
 
 

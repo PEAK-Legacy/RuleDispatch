@@ -399,7 +399,7 @@ cdef class BaseDispatcher:
                 finally:
                     cache = None    # GC of values computed during dispatch
 
-        if PyInstance_Check(func) and isinstance(func,DispatchError):
+        if isinstance(func,DispatchError):
             func(*argtuple)
 
         return func
