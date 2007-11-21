@@ -50,6 +50,7 @@ from weakref import WeakKeyDictionary, ref
 from dispatch.interfaces import *
 from new import instancemethod
 import dispatch
+from peak.util.extremes import Min, Max
 
 __all__ = [
     'ProtocolCriterion', 'ClassCriterion', 'SubclassCriterion', 'Inequality',
@@ -71,7 +72,6 @@ try:
 except NameError:
     from sets import Set as set
     from sets import ImmutableSet as frozenset
-
 
 
 
@@ -649,47 +649,6 @@ class SubclassCriterion(ClassCriterion):
 
 
 
-
-
-
-
-
-class _ExtremeType(object):     # Courtesy of PEP 326
-
-    def __init__(self, cmpr, rep):
-        object.__init__(self)
-        self._cmpr = cmpr
-        self._rep = rep
-
-    def __cmp__(self, other):
-        if isinstance(other, self.__class__) and\
-           other._cmpr == self._cmpr:
-            return 0
-        return self._cmpr
-
-    def __repr__(self):
-        return self._rep
-
-    def __lt__(self,other):
-        return self.__cmp__(other)<0
-
-    def __le__(self,other):
-        return self.__cmp__(other)<=0
-
-    def __gt__(self,other):
-        return self.__cmp__(other)>0
-
-    def __eq__(self,other):
-        return self.__cmp__(other)==0
-
-    def __ge__(self,other):
-        return self.__cmp__(other)>=0
-
-    def __ne__(self,other):
-        return self.__cmp__(other)<>0
-
-Max = _ExtremeType(1, "Max")
-Min = _ExtremeType(-1, "Min")
 
 
 
