@@ -21,13 +21,15 @@ speedups = Feature(
 
 setup(
     name="RuleDispatch",
-    version="0.5a0",
+    version="0.5a1",
     description="Rule-based Dispatching and Generic Functions",
+    long_description = open('README.txt').read(),
     author="Phillip J. Eby",
     author_email="peak@eby-sarna.com",
     license="PSF or ZPL",
     install_requires = ['PyProtocols>=1.0a0dev-r2302', 'Extremes>=1.1'],
-    #url="http://peak.telecommunity.com/PyProtocols.html",
+    url = "http://pypi.python.org/pypi/RuleDispatch",
+    download_url = "http://peak.telecommunity.com/snapshots/",
     zip_safe    = sys.version>='2.3.5',
     test_suite  = 'dispatch.tests.test_suite',
     package_dir = {'':'src'},
