@@ -55,7 +55,7 @@ def com_binary(opname, builder,nodelist):
 testlist = subscriptlist = curry(com_binary, 'Tuple')
 
 # testlist_gexp test (gen_for | (',' test)* [','])
-testlist_gexp = testlist    # XXX
+testlist_gexp = testlist_comp = testlist    # XXX
 
 # test: and_test ('or' and_test)* | lambdef
 test = curry(com_binary, 'Or')

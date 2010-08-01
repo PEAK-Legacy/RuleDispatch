@@ -548,6 +548,9 @@ class Pointer(int):
     def __eq__(self,other):
         return self is other or int(self)==other and self.ref() is not None
 
+    def __ne__(self, other):
+        return not (self==other)
+
     def __repr__(self):
         if self.ref() is None:
             return "Pointer(<invalid at 0x%s>)" % hex(self)
@@ -560,9 +563,6 @@ def dispatch_by_identity(table,ob):
     if oid in table:
         return table[oid]
     return table[None]
-
-
-
 
 
 
