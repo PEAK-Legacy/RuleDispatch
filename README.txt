@@ -1,3 +1,17 @@
+Please Use PEAK-Rules Instead Of This Package
+=============================================
+
+RuleDispatch is no longer maintained; if you are actively developing code that
+uses generic functions, you should switch to PEAK-Rules, if you can.
+
+If you are porting existing code, PEAK-Rules now includes a
+``peak.rules.dispatch`` module that provides a partial API emulation for
+RuleDispatch.  If your code won't run simply by replacing "import dispatch"
+with "from peak.rules import dispatch", please let me know via the PEAK
+`mailing list`_, and I'll provide porting assistance or updates to the
+emulation API, as appropriate.
+
+
 RuleDispatch
 ============
 
@@ -7,7 +21,7 @@ specify a function in terms of a collection of arbitrary rules, including
 Lisp-style "before/after/around" methods.
 
 Although it is used by various projects, including ``peak.security.rules`` and
-TurboGears, it is no longer being actively developed.  It is expected to be
+TurboGears, it is no longer being actively developed; it is being
 replaced by the more extensible PEAK-Rules package, which is currently in
 development (with snapshot and SVN releases available in PyPI).
 
@@ -26,8 +40,8 @@ RuleDispatch, it is absolutely a dead parrot, and there are no plans to update
 its documentation, tests, or anything else.  Use it at your own risk.
 
 
-Python 2.5 Issues
------------------
+Python 2.5+ Issues
+------------------
 RuleDispatch has not been updated for certain additions to the Python 2.5
 grammar.  It does not support any kind of loops, generator expressions or
 "y if x else z" conditional expressions in rules, and its behavior if you use
