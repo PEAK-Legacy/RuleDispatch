@@ -236,7 +236,7 @@ class OrExpr(LogicalExpr):
 
         return or_, (EXPR_GETTER_ID,)
 
-    [as(classmethod)]
+    [as_(classmethod)]
     def immediate(klass,seq):
         for item in seq:
             if item:
@@ -260,7 +260,7 @@ class AndExpr(LogicalExpr):
 
         return and_, (EXPR_GETTER_ID,)
 
-    [as(classmethod)]
+    [as_(classmethod)]
     def immediate(klass,seq):
         for item in seq:
             if not item:
@@ -278,7 +278,7 @@ class IfElse(LogicalExpr):
             return get(argIds[2])
         return ifelse, (EXPR_GETTER_ID,)
 
-    [as(classmethod)]
+    [as_(classmethod)]
     def immediate(klass,seq):
         if seq[1]: return seq[0]
         return seq[2]

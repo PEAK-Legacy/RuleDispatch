@@ -94,8 +94,7 @@ def generic(combiner=None):
 
     return decorate_assignment(callback)
 
-
-def as(*decorators):
+def as_(*decorators):
     """Use Python 2.4 decorators w/Python 2.2+
 
     Example:
@@ -120,6 +119,7 @@ def as(*decorators):
     from peak.util.decorators import decorate_assignment
     return decorate_assignment(callback)
 
+globals()['as'] = as_   # backward compatibility for Python < 2.6
 
 def on(argument_name):
     """Decorate the following function as a single-dispatch generic function
