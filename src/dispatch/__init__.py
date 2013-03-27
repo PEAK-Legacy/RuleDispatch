@@ -18,10 +18,10 @@
 
 from dispatch.interfaces import *
 from types import ClassType as _ClassType
+from peak.util.decorators import decorate as as_
+globals()['as'] = as_   # backward compatibility for Python < 2.6
 
 _cls  = _ClassType,type
-
-
 
 
 
@@ -94,32 +94,32 @@ def generic(combiner=None):
 
     return decorate_assignment(callback)
 
-def as_(*decorators):
-    """Use Python 2.4 decorators w/Python 2.2+
 
-    Example:
 
-        import dispatch
 
-        class Foo(object):
-            [dispatch.as(classmethod)]
-            def something(cls,etc):
-                \"""This is a classmethod\"""
-    """
 
-    if len(decorators)>1:
-        decorators = list(decorators)
-        decorators.reverse()
 
-    def callback(frame,k,v,old_locals):
-        for d in decorators:
-            v = d(v)
-        return v
 
-    from peak.util.decorators import decorate_assignment
-    return decorate_assignment(callback)
 
-globals()['as'] = as_   # backward compatibility for Python < 2.6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def on(argument_name):
     """Decorate the following function as a single-dispatch generic function
